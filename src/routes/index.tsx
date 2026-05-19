@@ -63,7 +63,7 @@ const stats = [
   { n: "98%", label: "On-Time Delivery" },
 ];
 
-function Index() {
+export function Index() {
   return (
     <div id="home" className="bg-charcoal text-ivory overflow-x-hidden">
       <Nav />
