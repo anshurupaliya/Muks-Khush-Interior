@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useCallback, type FormEvent } from "react";
 import {
-  Phone, Mail, MapPin, Instagram, Facebook, Linkedin,
+  Phone, Mail, MapPin, Instagram,
   ChevronDown, ArrowRight, Star, Award, Users, Clock, ShieldCheck,
   Hammer, Sofa, Building2, Bath, Boxes, Paintbrush, Send,
   X, ChevronLeft, ChevronRight,
@@ -781,16 +781,15 @@ function Contact() {
           <div className="mt-12">
             <p className="text-[0.65rem] uppercase tracking-[0.3em] text-ivory/55 mb-4">Follow</p>
             <div className="flex gap-3">
-              {[Instagram, Facebook, Linkedin].map((I, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  aria-label="Social link"
-                  className="flex h-11 w-11 items-center justify-center border border-gold/40 text-gold hover:bg-gold hover:text-charcoal transition-all"
-                >
-                  <I size={16} strokeWidth={1.5} />
-                </a>
-              ))}
+              <a
+                href="https://www.instagram.com/muks_khush.interior?igsh=YzF5bWdhdmR5a3hv"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-11 w-11 items-center justify-center border border-gold/40 text-gold hover:bg-gold hover:text-charcoal transition-all"
+              >
+                <Instagram size={16} strokeWidth={1.5} />
+              </a>
             </div>
           </div>
         </div>
