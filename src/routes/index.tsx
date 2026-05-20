@@ -14,6 +14,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const BASE = import.meta.env.BASE_URL;
+
 const HERO_IMG =
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80";
 const ABOUT_IMG =
@@ -51,24 +53,8 @@ const portfolio: Project[] = [
     tag: "Commercial",
     year: "2023",
     desc: "Africa's largest innovation hub. A landmark commercial build-out featuring soaring timber-slatted ceilings, raw brick walls, custom rattan lounge seating, a multi-level atrium, dedicated co-working floors, conference suites, and a sculptural terracotta-tiled facade.",
-    cover: "/projects/norrsken/01.jpg",
-    images: [
-      "/projects/norrsken/01.jpg",
-      "/projects/norrsken/02.jpg",
-      "/projects/norrsken/03.jpg",
-      "/projects/norrsken/04.jpg",
-      "/projects/norrsken/05.jpg",
-      "/projects/norrsken/06.jpg",
-      "/projects/norrsken/07.jpg",
-      "/projects/norrsken/08.jpg",
-      "/projects/norrsken/09.jpg",
-      "/projects/norrsken/10.jpg",
-      "/projects/norrsken/11.jpg",
-      "/projects/norrsken/12.jpg",
-      "/projects/norrsken/13.jpg",
-      "/projects/norrsken/14.jpg",
-      "/projects/norrsken/15.jpg",
-    ],
+    cover: `${BASE}projects/norrsken/01.jpg`,
+    images: Array.from({ length: 15 }, (_, i) => `${BASE}projects/norrsken/${String(i + 1).padStart(2, "0")}.jpg`),
   },
   {
     id: "inzovu",
@@ -78,14 +64,8 @@ const portfolio: Project[] = [
     tag: "Interiors",
     year: "2025",
     desc: "A complete interior design and furnishing project — geometric feature wall with diagonal panelling, open-plan living and dining space, custom dark matte kitchen with granite island.",
-    cover: "/projects/inzovu/01.jpg",
-    images: [
-      "/projects/inzovu/01.jpg",
-      "/projects/inzovu/02.jpg",
-      "/projects/inzovu/03.jpg",
-      "/projects/inzovu/04.jpg",
-      "/projects/inzovu/05.jpg",
-    ],
+    cover: `${BASE}projects/inzovu/01.jpg`,
+    images: Array.from({ length: 5 }, (_, i) => `${BASE}projects/inzovu/${String(i + 1).padStart(2, "0")}.jpg`),
   },
 ];
 
