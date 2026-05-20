@@ -38,12 +38,12 @@ export function Nav() {
           </span>
         </a>
 
-        <nav className="hidden lg:flex items-center gap-9">
+        <nav className="hidden lg:flex items-center gap-6">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="link-underline text-[0.78rem] uppercase tracking-[0.18em] text-ivory/80 hover:text-ivory transition-colors"
+              className="link-underline text-[0.72rem] uppercase tracking-[0.14em] text-ivory/80 hover:text-ivory transition-colors"
             >
               {l.label}
             </a>
@@ -52,11 +52,11 @@ export function Nav() {
 
         <div className="hidden md:flex items-center gap-5">
           <a
-            href="tel:+250731211105"
+            href="tel:+250795200200"
             className="flex items-center gap-2 text-ivory/90 hover:text-gold transition-colors text-sm"
           >
             <Phone size={15} className="text-gold" />
-            <span className="tracking-wide">+250 731 211 105</span>
+            <span className="tracking-wide whitespace-nowrap">+250 795 200 200</span>
           </a>
           <a href="#contact" className="btn-gold">
             Get a Quote
@@ -90,10 +90,10 @@ export function Nav() {
             </a>
           ))}
           <a
-            href="tel:+250731211105"
+            href="tel:+250795200200"
             className="flex items-center gap-2 mt-4 text-gold"
           >
-            <Phone size={16} /> +250 731 211 105
+            <Phone size={16} /> +250 795 200 200
           </a>
           <a href="#contact" onClick={() => setOpen(false)} className="btn-gold mt-4 self-start">
             Get a Quote
