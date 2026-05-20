@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, useCallback, type FormEvent } from "react";
 import {
   Phone, Mail, MapPin, Instagram, Facebook, Linkedin,
   ChevronDown, ArrowRight, Star, Award, Users, Clock, ShieldCheck,
   Hammer, Sofa, Building2, Bath, Boxes, Paintbrush, Send,
+  X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { WhatsAppFab } from "@/components/site/WhatsAppFab";
@@ -29,16 +30,63 @@ const services = [
   { icon: Paintbrush, title: "Painting & Finishing", desc: "Premium paint systems, textures, and the small touches that linger." },
 ];
 
-const portfolio = [
-  { img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80", title: "Nyarutarama Villa", cat: "Residential", tag: "Residential" },
-  { img: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80", title: "Walnut Living Room", cat: "Interior Design", tag: "Interiors" },
-  { img: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80", title: "Calacatta Kitchen", cat: "Kitchen Remodel", tag: "Renovation" },
-  { img: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80", title: "Kigali Boutique Office", cat: "Commercial", tag: "Commercial" },
-  { img: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80", title: "Master Bedroom Suite", cat: "Interior Design", tag: "Interiors" },
-  { img: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80", title: "Hotel Lobby Restaurant", cat: "Hospitality", tag: "Commercial" },
-  { img: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80", title: "Spa Bathroom", cat: "Renovation", tag: "Renovation" },
-  { img: "https://images.unsplash.com/photo-1558997519-83ea9252edf8?auto=format&fit=crop&w=1200&q=80", title: "Walk-in Wardrobe", cat: "Modular Joinery", tag: "Interiors" },
-  { img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80", title: "Terrace & Landscape", cat: "Residential", tag: "Residential" },
+type Project = {
+  id: string;
+  title: string;
+  location: string;
+  cat: string;
+  tag: string;
+  year: string;
+  desc: string;
+  cover: string;
+  images: string[];
+};
+
+const portfolio: Project[] = [
+  {
+    id: "norrsken",
+    title: "Norrsken House",
+    location: "Kigali Innovation City, Rwanda",
+    cat: "Commercial Interior",
+    tag: "Commercial",
+    year: "2023",
+    desc: "Africa's largest innovation hub. A landmark commercial build-out featuring soaring timber-slatted ceilings, raw brick walls, custom rattan lounge seating, a multi-level atrium, dedicated co-working floors, conference suites, and a sculptural terracotta-tiled facade.",
+    cover: "/projects/norrsken/01.jpg",
+    images: [
+      "/projects/norrsken/01.jpg",
+      "/projects/norrsken/02.jpg",
+      "/projects/norrsken/03.jpg",
+      "/projects/norrsken/04.jpg",
+      "/projects/norrsken/05.jpg",
+      "/projects/norrsken/06.jpg",
+      "/projects/norrsken/07.jpg",
+      "/projects/norrsken/08.jpg",
+      "/projects/norrsken/09.jpg",
+      "/projects/norrsken/10.jpg",
+      "/projects/norrsken/11.jpg",
+      "/projects/norrsken/12.jpg",
+      "/projects/norrsken/13.jpg",
+      "/projects/norrsken/14.jpg",
+      "/projects/norrsken/15.jpg",
+    ],
+  },
+  {
+    id: "inzovu",
+    title: "Inzovu",
+    location: "Kigali, Rwanda",
+    cat: "Residential Interior",
+    tag: "Interiors",
+    year: "2025",
+    desc: "A complete interior design and furnishing project — geometric feature wall with diagonal panelling, open-plan living and dining space, custom dark matte kitchen with granite island.",
+    cover: "/projects/inzovu/01.jpg",
+    images: [
+      "/projects/inzovu/01.jpg",
+      "/projects/inzovu/02.jpg",
+      "/projects/inzovu/03.jpg",
+      "/projects/inzovu/04.jpg",
+      "/projects/inzovu/05.jpg",
+    ],
+  },
 ];
 
 const filters = ["All", "Residential", "Commercial", "Renovation", "Interiors"] as const;
@@ -271,7 +319,16 @@ function Services() {
 /* --------------------------- PORTFOLIO --------------------------- */
 function Portfolio() {
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [activeImg, setActiveImg] = useState(0);
+
   const filtered = portfolio.filter((p) => filter === "All" || p.tag === filter);
+
+  const openProject = (project: Project, imgIndex = 0) => {
+    setActiveProject(project);
+    setActiveImg(imgIndex);
+  };
+  const closeProject = () => setActiveProject(null);
 
   return (
     <section id="portfolio" className="py-28 md:py-40 grain">
@@ -310,26 +367,30 @@ function Portfolio() {
             const tall = i % 5 === 0 || i % 5 === 3;
             return (
               <Reveal
-                key={p.title + i}
+                key={p.id}
                 delay={(i % 3) * 100}
                 className={tall ? "sm:row-span-2" : ""}
               >
-                <article className="group relative h-full w-full overflow-hidden cursor-pointer">
+                <article
+                  className="group relative h-full w-full overflow-hidden cursor-pointer"
+                  onClick={() => openProject(p, 0)}
+                >
                   <img
-                    src={p.img}
+                    src={p.cover}
                     alt={p.title}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-110"
                   />
-                  <span className="absolute top-4 left-4 z-10 text-[0.6rem] tracking-[0.25em] uppercase bg-charcoal/70 backdrop-blur px-2 py-1 text-gold border border-gold/30">
-                    Sample Project
-                  </span>
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
                   <div className="absolute inset-x-0 bottom-0 p-6 translate-y-3 group-hover:translate-y-0 transition-transform duration-500">
                     <p className="text-[0.65rem] tracking-[0.3em] uppercase text-gold">{p.cat}</p>
                     <h3 className="mt-2 font-serif text-2xl text-ivory">{p.title}</h3>
+                    <p className="text-[0.65rem] tracking-[0.2em] uppercase text-ivory/50 mt-1">{p.location} · {p.year}</p>
                     <span className="mt-3 inline-block h-[1px] w-0 bg-gold transition-all duration-500 group-hover:w-12" />
                   </div>
+                  <span className="absolute top-4 right-4 z-10 text-[0.6rem] tracking-[0.2em] uppercase bg-charcoal/70 backdrop-blur px-2 py-1 text-ivory/70 border border-gold/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {p.images.length} photos
+                  </span>
                 </article>
               </Reveal>
             );
@@ -338,11 +399,133 @@ function Portfolio() {
 
         <div className="mt-14 text-center">
           <a href="#contact" className="btn-outline-gold">
-            View Full Portfolio <ArrowRight size={14} />
+            Discuss Your Project <ArrowRight size={14} />
           </a>
         </div>
       </div>
+
+      {activeProject && (
+        <ProjectModal
+          project={activeProject}
+          activeImg={activeImg}
+          setActiveImg={setActiveImg}
+          onClose={closeProject}
+        />
+      )}
     </section>
+  );
+}
+
+/* ----------------------- PROJECT MODAL / GALLERY ----------------------- */
+function ProjectModal({
+  project,
+  activeImg,
+  setActiveImg,
+  onClose,
+}: {
+  project: Project;
+  activeImg: number;
+  setActiveImg: (i: number) => void;
+  onClose: () => void;
+}) {
+  const total = project.images.length;
+  const prev = useCallback(() => setActiveImg((activeImg - 1 + total) % total), [activeImg, total, setActiveImg]);
+  const next = useCallback(() => setActiveImg((activeImg + 1) % total), [activeImg, total, setActiveImg]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose, prev, next]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col bg-charcoal/97 backdrop-blur-md"
+      onClick={onClose}
+    >
+      {/* Header */}
+      <div
+        className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-gold/15 shrink-0"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div>
+          <span className="eyebrow text-[0.6rem]">{project.cat} · {project.location} · {project.year}</span>
+          <h3 className="font-serif text-2xl md:text-3xl mt-1">{project.title}</h3>
+        </div>
+        <button
+          onClick={onClose}
+          className="flex h-10 w-10 items-center justify-center border border-gold/30 text-gold hover:bg-gold hover:text-charcoal transition-colors"
+          aria-label="Close"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Main image */}
+      <div
+        className="relative flex-1 flex items-center justify-center overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          key={activeImg}
+          src={project.images[activeImg]}
+          alt={`${project.title} — photo ${activeImg + 1}`}
+          className="max-h-full max-w-full object-contain"
+          style={{ animation: "fadeIn 0.25s ease" }}
+        />
+
+        {total > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-4 md:left-8 flex h-12 w-12 items-center justify-center border border-gold/40 text-gold bg-charcoal/60 hover:bg-gold hover:text-charcoal transition-all"
+              aria-label="Previous"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-4 md:right-8 flex h-12 w-12 items-center justify-center border border-gold/40 text-gold bg-charcoal/60 hover:bg-gold hover:text-charcoal transition-all"
+              aria-label="Next"
+            >
+              <ChevronRight size={20} />
+            </button>
+
+            <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[0.65rem] tracking-[0.3em] uppercase text-ivory/50">
+              {activeImg + 1} / {total}
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnail strip */}
+      {total > 1 && (
+        <div
+          className="flex gap-2 px-6 md:px-10 py-4 overflow-x-auto shrink-0 border-t border-gold/15"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {project.images.map((img, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveImg(i)}
+              className={`shrink-0 h-16 w-24 overflow-hidden border-2 transition-all ${
+                i === activeImg ? "border-gold opacity-100" : "border-transparent opacity-45 hover:opacity-70"
+              }`}
+            >
+              <img src={img} alt="" className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -485,7 +668,7 @@ function CtaSection() {
           </Reveal>
           <Reveal delay={360}>
             <a
-              href="tel:+250731211105"
+              href="tel:+250795200200"
               className="mt-8 inline-flex items-center gap-3 group"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/60 text-gold transition-colors group-hover:bg-gold group-hover:text-charcoal">
@@ -495,7 +678,7 @@ function CtaSection() {
                 <span className="block text-[0.65rem] uppercase tracking-[0.3em] text-ivory/60">
                   Call directly
                 </span>
-                <span className="block font-serif text-2xl text-ivory">+250 731 211 105</span>
+                <span className="block font-serif text-2xl text-ivory">+250 795 200 200</span>
               </span>
             </a>
           </Reveal>
@@ -589,10 +772,10 @@ function Contact() {
           </Reveal>
 
           <div className="mt-12 space-y-7">
-            <ContactRow icon={Phone} label="Phone" value="+250 731 211 105" href="tel:+250731211105" />
+            <ContactRow icon={Phone} label="Phone" value="+250 795 200 200" href="tel:+250795200200" />
             <ContactRow icon={Mail} label="Email" value="hello@muksandkhush.rw" href="mailto:hello@muksandkhush.rw" />
             <ContactRow icon={MapPin} label="Studio" value="Kigali, Rwanda" />
-            <ContactRow icon={Users} label="WhatsApp" value="Chat with our team" href="https://wa.me/250731211105" />
+            <ContactRow icon={Users} label="WhatsApp" value="Chat with our team" href="https://wa.me/250795200200" />
           </div>
 
           <div className="mt-12">
@@ -675,7 +858,7 @@ function Footer() {
             <ul className="space-y-3 text-sm text-ivory/70">
               <li className="flex items-center gap-2">
                 <Phone size={13} className="text-gold" />
-                <a href="tel:+250731211105">+250 731 211 105</a>
+                <a href="tel:+250795200200">+250 795 200 200</a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={13} className="text-gold" />
